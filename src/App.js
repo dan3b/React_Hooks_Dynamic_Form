@@ -1,26 +1,49 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { lazy, Suspense } from "react";
+import { Route, Switch } from "react-router-dom";
 
-function App() {
+import Header from "./components/Header/Header";
+import { registerForm, loginForm } from "./UI/Form/formElements";
+
+const Fruits = lazy(() => import("./components/Fruits/Fruits"));
+const AuthenticationForm = lazy(() =>
+  import("./components/AuthenticationForm/AuthenticationForm")
+);
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Header />
+      <Suspense fallback={<div>Loading ...</div>}>
+        <Switch>
+          <Route exact path="/" render={() => <Fruits />} />
+          <Route
+            exact
+            path="/register"
+            render={() => (
+              <AuthenticationForm
+                action="register"
+                formTitle="Registration"
+                buttonText="Register"
+                formStructure={registerForm}
+              />
+            )}
+          />
+          <Route
+            exact
+            path="/login"
+            render={() => (
+              <AuthenticationForm
+                action="login"
+                formTitle="Login"
+                buttonText="Login"
+                formStructure={loginForm}
+              />
+            )}
+          />
+        </Switch>
+      </Suspense>
     </div>
   );
-}
+};
 
 export default App;
